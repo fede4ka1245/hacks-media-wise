@@ -1,3 +1,7 @@
+import axios from "axios";
+
+process.env.REACT_APP_SERVER_API = process.env.REACT_APP_SERVER_API ?? ''
+
 export const uploadFile = (file) => {
   const formdata = new FormData();
   formdata.append("file", file, file.fileName);
@@ -8,37 +12,24 @@ export const uploadFile = (file) => {
     redirect: 'follow'
   };
 
-  return fetch(`${process.env.REACT_APP_SERVER_API}/upload`, requestOptions)
+  return fetch(`${process.env.REACT_APP_SERVER_API}/api/upload`, requestOptions)
     .then((res) => {
-      return res.json()
+      return res.text()
     });
 }
 
-export const getTerms = (id) => {
-  return fetch(`${process.env.REACT_APP_SERVER_API}/uploads/${id}/terms`)
-    .then((res) => res.json())
-    .then((arr) => {
-      return [...arr.map((el) => ({ ...el, timeStart: el?.time_start || '-', timeEnd: el?.time_end || '-' }))];
-    });
+export const getModel = (id) => {
+  return axios.post(`${process.env.REACT_APP_SERVER_API}/api/upload/${id}/result`)
+    .then((res) => res.data);
 }
 
-export const getTranscription = (id) => {
-  return fetch(`${process.env.REACT_APP_SERVER_API}/uploads/${id}/transcription`)
-    .then((res) => res.text());
-}
-
-export const getSummary = (id) => {
-  return fetch(`${process.env.REACT_APP_SERVER_API}/uploads/${id}/summary`)
-    .then((res) => res.text());
-}
-
-export const getState = (id) => {
-  return fetch(`${process.env.REACT_APP_SERVER_API}/uploads/${id}/state`)
+export const getStatus = (id) => {
+  return axios.post(`${process.env.REACT_APP_SERVER_API}/api/upload/${id}/status`)
     .then((res) => {
       if (res.status === 404) {
         throw new Error('Not found');
       }
 
-      return res.json();
+      return res.data;
     });
 }

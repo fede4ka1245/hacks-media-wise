@@ -1,26 +1,18 @@
-import {getState} from "../api";
+import {getStatus} from "../api";
 import EventBus from "js-event-bus";
 
 export const statuses = {
-  created: {
+  uploading: {
     order: 1,
-    name: 'created'
-  },
-  audio: {
-    order: 2,
-    name: 'audio'
-  },
-  transcription: {
-    order: 3,
     name: 'transcription'
   },
-  summary: {
-    order: 4,
-    name: 'summary'
+  processing: {
+    order: 2,
+    name: 'processing'
   },
-  terms: {
-    order: 5,
-    name: 'terms'
+  ready: {
+    order: 3,
+    name: 'ready'
   },
   died: {
     order: -1,
@@ -38,7 +30,7 @@ export const pullState = (id, status, timing = 1000) => {
     }).bind(this));
     const pull = async () => {
       try {
-        const state = await getState(id);
+        const state = await getStatus(id);
 
         if (state === 'died') {
           reject('died');

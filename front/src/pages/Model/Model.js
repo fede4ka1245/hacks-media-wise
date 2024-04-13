@@ -8,10 +8,9 @@ import { ArrowBackIosRounded} from "@mui/icons-material";
 import {useNavigate, useParams} from "react-router-dom";
 import {routes} from "../../routes";
 import {useDispatch, useSelector} from "react-redux";
-import Term from "../../components/term/Term";
-import {loadSummary, loadTerms, loadTranscription} from "../../store";
+import {loadModel} from "../../store";
 import {throttle} from "lodash";
-import styles from './Summary.module.css';
+import styles from './Model.module.css';
 import {eventBus, events, getSummariesHistory, setSummariesHistory} from "../../logic";
 import Button from "../../ui/button/Button";
 
@@ -35,12 +34,13 @@ function elementInViewport(el) {
     )
   );
 }
-const Summary = () => {
+const Model = () => {
   const {
-    summary,
+    model,
   } = useSelector((state) => state.main);
   const dispatch = useDispatch();
   const { id } = useParams();
+
   const [targetTab, setTargetTab] = useState(tabs.terms);
   const targetTabs = useMemo(() => {
     return Object.values(tabs);
@@ -48,31 +48,31 @@ const Summary = () => {
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
 
-  const downloadTxtFile = useCallback(() => {
-    const makeTextFile = function (text) {
-      const blob = new Blob([text], {type: 'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `#${id}` || 'download';
-      a.click();
-    };
-
-    let text = `эконометрической модели`;
-
-    let terms = ''
-
-    for (const term of summary.terms) {
-      terms += `${term.name.toUpperCase()} - ${term.definition}\n\n`;
-    }
-
-    const summaryText = summary.summary;
-    const trans = summary.transcription;
-
-    text = text.replace('terms', terms).replace('summary', summaryText).replace('trans', trans);
-
-    makeTextFile(text)
-  }, [id, summary]);
+  // const downloadTxtFile = useCallback(() => {
+  //   const makeTextFile = function (text) {
+  //     const blob = new Blob([text], {type: 'text/plain'});
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement('a');
+  //     a.href = url;
+  //     a.download = `#${id}` || 'download';
+  //     a.click();
+  //   };
+  //
+  //   let text = `эконометрической модели`;
+  //
+  //   let terms = ''
+  //
+  //   for (const term of summary.terms) {
+  //     terms += `${term.name.toUpperCase()} - ${term.definition}\n\n`;
+  //   }
+  //
+  //   const summaryText = summary.summary;
+  //   const trans = summary.transcription;
+  //
+  //   text = text.replace('terms', terms).replace('summary', summaryText).replace('trans', trans);
+  //
+  //   makeTextFile(text)
+  // }, [id, model]);
 
   const onMainPageClick = useCallback(() => {
     navigate(routes.main);
@@ -84,22 +84,8 @@ const Summary = () => {
     }
 
     if (id !== undefined) {
-      Promise.all([
-        dispatch(loadTerms(Number(id))),
-        dispatch(loadTranscription(Number(id)))
-          .then((res) => {
-            if (res?.error) {
-              setIsError(true);
-              if (res.error.message === "Not found") {
-                setSummariesHistory(getSummariesHistory().filter((_id) => id !== _id))
-              }
-            }
-          })
-          .catch(() => {
-            setIsError(true);
-          }),
-        dispatch(loadSummary(Number(id))),
-      ]).catch((err) => {
+      dispatch(loadModel(id))
+        .catch((err) => {
           console.log(JSON.stringify(err));
           setIsError(true);
         });
@@ -121,22 +107,24 @@ const Summary = () => {
   }, []);
 
   useEffect(() => {
-    const ids = [...Object.values(tabs).map(({ id }) => id)];
+    if (tabs.length) {
+      const ids = [...Object.values(tabs).map(({ id }) => id)];
 
-    window.onscroll = throttle(() => {
-      try {
-        for (const id of ids) {
-          if (elementInViewport(document.getElementById(id))) {
-            const tab = Object.values(tabs).find((tab) => id === tab?.id);
-            setTargetTab(tab);
-            return;
+      window.onscroll = throttle(() => {
+        try {
+          for (const id of ids) {
+            if (elementInViewport(document.getElementById(id))) {
+              const tab = Object.values(tabs).find((tab) => id === tab?.id);
+              setTargetTab(tab);
+              return;
+            }
           }
-        }
-      } catch {}
-    }, 10);
+        } catch {}
+      }, 10);
 
-    return () => {
-      window.onscroll = null;
+      return () => {
+        window.onscroll = null;
+      }
     }
   }, []);
 
@@ -257,99 +245,41 @@ const Summary = () => {
             </Grid>
           </Tappable>
         </Grid>
-        <Tabs
-          value={targetTab.id}
-          onChange={onTabChange}
-          aria-label="date-tabs"
-          variant="scrollable"
-        >
-          {targetTabs.map((tab) => (
-            <Tab key={tab.id} label={tab.label} value={tab.id} />
-          ))}
-        </Tabs>
+        {/*<Tabs*/}
+        {/*  value={targetTab.id}*/}
+        {/*  onChange={onTabChange}*/}
+        {/*  aria-label="date-tabs"*/}
+        {/*  variant="scrollable"*/}
+        {/*>*/}
+        {/*  {targetTabs.map((tab) => (*/}
+        {/*    <Tab key={tab.id} label={tab.label} value={tab.id} />*/}
+        {/*  ))}*/}
+        {/*</Tabs>*/}
       </Grid>
-      {!summary.isTermsLoading && (
-        <>
-          <Typography
-            fontWeight={'1000'}
-            fontSize={'25px'}
-            userSelect={'none'}
-            fontFamily={'Nunito'}
-            color={'white'}
-            mb={'var(--space-sm)'}
-            mt={'var(--space-md)'}
-          >
-            Скачайте модель
-          </Typography>
-          <Grid mb={'var(--space-md)'}>
-            <Button variant={'filled'} onClick={downloadTxtFile}>
-              Открыть модель
-            </Button>
-          </Grid>
-        </>
-      )}
-      <Grid mt={'var(--space-md)'} id={tabs.terms.id} width={'100%'}>
+      <Grid mt={'var(--space-md)'} width={'100%'}>
         <PreloadContentPlacement
-          header={tabs.terms.label}
-          isLoading={summary.isTermsLoading}
+          isLoading={model?.isLoading}
         >
-          {!summary.terms?.length && (
-            <Typography
-              fontWeight={'1000'}
-              fontSize={'25px'}
-              userSelect={'none'}
-              fontFamily={'Nunito'}
-              color={'var(--hint-color)'}
-              mb={'var(--space-md)'}
-            >
-              Не нашел терминов :(
-            </Typography>
-          )}
-          {summary.terms.map((term) => (
-            <Grid width={'100%'} overflow={'hidden'} key={term.name} pt={'var(--space-sm)'} pb={'var(--space-sm)'}>
-              <Term
-                term={term}
+          {model.charts?.map(({ chartLink, feature }) => (
+            <div>
+              <Typography
+                fontWeight={'1000'}
+                fontSize={'28px'}
+                userSelect={'none'}
+                fontFamily={'Nunito'}
+                color={'white'}
+              >
+                {feature}
+              </Typography>
+              <iframe
+                src={`${process.env.REACT_APP_SERVER_API}/${chartLink}`}
               />
-            </Grid>
+            </div>
           ))}
-        </PreloadContentPlacement>
-      </Grid>
-      <Grid mt={'var(--space-md)'} id={tabs.summary.id} width={'100%'}>
-        <PreloadContentPlacement
-          header={tabs.summary.label}
-          isLoading={summary.isSummaryLoading}
-        >
-          <Typography
-            fontFamily={'Time New Roman'}
-            fontSize={'24px'}
-            lineHeight={1.2}
-            userSelect={'none'}
-            color={'var(--text-secondary-color)'}
-            mt={'var(--space-md)'}
-          >
-            {summary.summary}
-          </Typography>
-        </PreloadContentPlacement>
-      </Grid>
-      <Grid mt={'var(--space-md)'} id={tabs.transcription.id}>
-        <PreloadContentPlacement
-          header={tabs.transcription.label}
-          isLoading={summary.isTranscriptionLoading}
-        >
-          <Typography
-            fontFamily={'Time New Roman'}
-            fontSize={'24px'}
-            lineHeight={1.2}
-            userSelect={'none'}
-            color={'var(--text-secondary-color)'}
-            mt={'var(--space-md)'}
-          >
-            {summary.transcription}
-          </Typography>
         </PreloadContentPlacement>
       </Grid>
     </Grid>
   );
 };
 
-export default Summary;
+export default Model;
