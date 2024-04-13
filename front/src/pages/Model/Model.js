@@ -272,7 +272,7 @@ const Model = () => {
                 {feature}
               </Typography>
               <iframe
-                src={`${process.env.REACT_APP_SERVER_API}/${chartLink}`}
+                src={`${process.env.REACT_APP_SERVER_API || ''}/${chartLink}`}
               />
             </div>
           ))}
