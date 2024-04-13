@@ -31,7 +31,7 @@ def layout(report_id=None, feature_number=None, **kwargs):
         df.reset_index(inplace=True)
         predicted_df.reset_index(inplace=True)
 
-        feature_name = df.columns[int(feature_number)]
+        feature_name = predicted_df.columns[int(feature_number)]
 
         fig = px.scatter(df[[datetime_index, feature_name, "predicted"]], x=datetime_index, y=feature_name,
                          color="predicted", trendline="ols")

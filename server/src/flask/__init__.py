@@ -51,8 +51,8 @@ def get_results(report_id: str):
     df = read_json(report["data"])
     predicted_df = read_json(report["predicted_data"])
     chart_items = list()
-    for feature_number, feature_name in enumerate(df.columns[3:], start=3):
-        if feature_name in predicted_df.columns:
+    for feature_number, feature_name in enumerate(predicted_df.columns):
+        if feature_number >= 1:
             chart_item = {"feature": feature_name, "chart_link": f"api/{report_id}/features_plots/{feature_number}"}
             chart_items.append(chart_item)
 
