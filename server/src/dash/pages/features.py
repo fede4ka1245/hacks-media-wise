@@ -4,8 +4,10 @@ from bson import ObjectId
 from dash import html, dcc
 import plotly.express as px
 from pandas import read_json
+import plotly.graph_objects as go
 
 from src.monogodb import mongodb_collection
+from src.processing.utils import confidence_interval
 
 dash.register_page(__name__, path_template="/api/<report_id>/features_plots/<feature_number>")
 
@@ -32,7 +34,7 @@ def layout(report_id=None, feature_number=None, **kwargs):
         feature_name = df.columns[int(feature_number)]
 
         fig = px.scatter(df[[datetime_index, feature_name, "predicted"]], x=datetime_index, y=feature_name,
-                      color="predicted", trendline="ols")
+                         color="predicted", trendline="ols")
         fig.update_traces(mode="lines")
         fig.add_vline(x=predicted_df[datetime_index][0], annotation_text="Пронгозируемая дата", line_dash="dot")
         fig.update_xaxes(type="date", range=[df[datetime_index].min(), predicted_df[datetime_index].max()])
@@ -50,5 +52,13 @@ def layout(report_id=None, feature_number=None, **kwargs):
         for interval in missing_data_intervals:
             fig.add_vrect(x0=df[datetime_index][interval[0]], x1=df[datetime_index][interval[1]], row="all", col=1,
                           fillcolor="red", opacity=0.25, line_width=0)
+
+        CI = confidence_interval(df[feature_name])
+
+        fig.add_traces([
+            go.Scatter(x=df[datetime_index], y=df[feature_name] + CI, mode="lines", showlegend=False),
+            go.Scatter(x=df[datetime_index], y=df[feature_name] - CI, mode="lines", name='95% confidence interval',
+                       fill='tonexty')
+        ])
 
         return dcc.Graph(figure=fig)
