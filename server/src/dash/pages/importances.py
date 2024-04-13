@@ -1,10 +1,7 @@
 import dash
 from bson import ObjectId
 from dash import html, dcc
-import plotly.express as px
 from pandas import read_json
-
-from re import compile as compile_regexp
 
 from server.src.monogodb import mongodb_collection
 

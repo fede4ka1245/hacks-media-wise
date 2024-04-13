@@ -49,7 +49,7 @@ def get_results(report_id: str):
         chart_item = {"feature": feature_name, "chart_link": f"/{report_id}/features_plots/{feature_number}"}
         chart_items.append(chart_item)
 
-    feature_weights_chart_link = "/no_way"
+    feature_weights_chart_link = f"/{report_id}/importances"
 
     return {
         "feature_weights_chart_link": feature_weights_chart_link,
