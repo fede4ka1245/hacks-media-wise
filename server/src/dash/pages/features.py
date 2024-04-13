@@ -1,6 +1,6 @@
 import dash
 from bson import ObjectId
-from dash import html, dcc, callback, Input, Output
+from dash import html, dcc
 import plotly.express as px
 from pandas import read_json
 
@@ -24,4 +24,4 @@ def layout(report_id=None, feature_number=None, **kwargs):
         feature_name = df.columns[int(feature_number)]
         fig = px.line(df[["Пеиод__Начало нед", feature_name]], x="Пеиод__Начало нед", y=feature_name)
 
-        return dcc.Graph(figure=fig),
+        return dcc.Graph(figure=fig)
