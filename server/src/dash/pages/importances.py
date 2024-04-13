@@ -5,8 +5,6 @@ from dash import html, dcc
 from pandas import read_json
 import matplotlib.pyplot as plt
 from plotly.tools import mpl_to_plotly
-import numpy as np
-from shap import Explanation
 
 from src.monogodb import mongodb_collection
 
@@ -25,10 +23,13 @@ def layout(report_id=None, **kwargs):
         shap_values = shap_values.to_numpy()
 
         shap.summary_plot(shap_values, val_values, show=False)
-        fig = plt.gcf()
-        fig.set_figheight(5)
-        fig.set_figwidth(10)
-        fig = mpl_to_plotly(fig)
-        # shap.plots.beeswarm(Explanation(shap_values), color="red")
+        mpl_fig = plt.gcf()
+        mpl_fig.set_figheight(5)
+        mpl_fig.set_figwidth(10)
 
-        return dcc.Graph(figure=fig)
+        tick_values, tick_texts = list(plt.yticks()[0]), list(map(lambda text: text._text, plt.yticks()[1]))
+
+        plotly_fig = mpl_to_plotly(mpl_fig)
+        plotly_fig.update_yaxes(tickvals=tick_values, ticktext=tick_texts)
+
+        return dcc.Graph(figure=plotly_fig)
