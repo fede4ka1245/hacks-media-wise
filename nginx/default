@@ -8,6 +8,7 @@ server {
       proxy_set_header Upgrade $http_upgrade;
       proxy_redirect off;
       proxy_buffering off;
+      proxy_cookie_path ~*^/.* /;
 		  proxy_pass http://back:${BACKEND_PORT};
 	}
 
