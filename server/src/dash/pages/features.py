@@ -31,8 +31,9 @@ def layout(report_id=None, feature_number=None, **kwargs):
 
         feature_name = df.columns[int(feature_number)]
 
-        fig = px.line(df[[datetime_index, feature_name, "predicted"]], x=datetime_index, y=feature_name,
-                      color="predicted", line_shape="spline", markers=True)
+        fig = px.scatter(df[[datetime_index, feature_name, "predicted"]], x=datetime_index, y=feature_name,
+                      color="predicted", trendline="ols")
+        fig.update_traces(mode="lines")
         fig.add_vline(x=predicted_df[datetime_index][0], annotation_text="Пронгозируемая дата", line_dash="dot")
         fig.update_xaxes(type="date", range=[df[datetime_index].min(), predicted_df[datetime_index].max()])
 
