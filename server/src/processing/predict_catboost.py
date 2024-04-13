@@ -124,6 +124,7 @@ def make_predict(
 
 
 def get_real_values(df: pd.DataFrame, mean_std_info: dict[str, dict[str, float]]):
+    df.drop(columns=["day0", "month0"])
     for column in df.select_dtypes(exclude=["datetime64[ns]"]).columns:
         df[column] = (
             df[column] * mean_std_info[column]["std"] + mean_std_info[column]["mean"]
