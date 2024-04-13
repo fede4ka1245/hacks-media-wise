@@ -17,6 +17,15 @@ def layout(report_id=None, feature_number=None, **kwargs):
         return html.Div(["Report not found"])
     else:
         df = read_json(report["data"])
+        predicted_df = read_json(report["predicted_data"])
+        df["predicted"] = 0
+        predicted_df["predicted"] = 1
+        df.set_index("Пеиод__Начало нед", inplace=True)
+        predicted_df.set_index("Пеиод__Начало нед", inplace=True)
+
+        df.update(predicted_df)
+        df.reset_index(inplace=True)
+
         feature_name = df.columns[int(feature_number)]
         fig = px.line(df[["Пеиод__Начало нед", feature_name]], x="Пеиод__Начало нед", y=feature_name)
 
