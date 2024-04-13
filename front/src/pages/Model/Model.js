@@ -13,6 +13,7 @@ import {throttle} from "lodash";
 import styles from './Model.module.css';
 import {eventBus, events, getSummariesHistory, setSummariesHistory} from "../../logic";
 import Button from "../../ui/button/Button";
+import Chart from "../../components/chart/Chart";
 
 const tabs = {
 }
@@ -271,7 +272,7 @@ const Model = () => {
               >
                 {feature}
               </Typography>
-              <iframe
+              <Chart
                 src={`${process.env.REACT_APP_SERVER_API || ''}/${chartLink}`}
               />
             </div>

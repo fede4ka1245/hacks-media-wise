@@ -1,0 +1,37 @@
+.dash-graph {
+  width: 110% !important;
+  height: 100% !important;
+  left: -5%;
+  position: absolute !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.bg {
+  border-radius: 8px !important;
+  fill: rgba(135, 116, 225, 0.4) !important;
+  rx: 12px !important;
+}
+
+*, text {
+  font-family: Nunito, sans-serif !important;
+  font-weight: bold !important;
+  color: white !important;
+  margin: 0;
+  padding: 0;
+}
+
+text {
+  fill: white !important;
+}
+
+.main-svg {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  background: unset !important;
+}
+
+html, body {
+  background: rgb(33, 33, 33);
+  overflow: hidden;
+}

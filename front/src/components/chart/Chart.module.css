@@ -1,0 +1,11 @@
+.main {
+  width: 100% !important;
+  min-height: 480px;
+  height: max-content;
+  border: none;
+  outline: none;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
