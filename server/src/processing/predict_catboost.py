@@ -26,7 +26,7 @@ def make_predict(
     cat_features=[],
     number_of_important_features=20,
     weeks_need_to_be_predicted=28,
-) -> tuple[pd.DataFrame, np.ndarray, Pool]:
+) -> tuple[pd.DataFrame, np.ndarray, pd.DataFrame]:
     small_df = train_df[~train_df[TARGET].isna()]
 
     timestamps_df = small_df.select_dtypes(include=["datetime64[ns]"])
@@ -118,7 +118,9 @@ def make_predict(
 
         predicts_df[column_name] = model.predict(tmp_df)["yhat"]
 
-    return get_real_values(predicts_df, mean_std_info), shap_values, val_dataset
+    val_features = val_dataset.get_features()
+    val_df = pd.DataFrame(val_features, columns=val_dataset.get_feature_names())
+    return get_real_values(predicts_df, mean_std_info), shap_values, val_df
 
 
 def get_real_values(df: pd.DataFrame, mean_std_info: dict[str, dict[str, float]]):
