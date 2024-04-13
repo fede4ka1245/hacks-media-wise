@@ -1,6 +1,6 @@
 import axios from "axios";
 
-process.env.REACT_APP_SERVER_API = process.env.REACT_APP_SERVER_API ?? ''
+const API_URL = process.env.REACT_APP_SERVER_API || ''
 
 export const uploadFile = (file) => {
   const formdata = new FormData();
@@ -12,19 +12,19 @@ export const uploadFile = (file) => {
     redirect: 'follow'
   };
 
-  return fetch(`${process.env.REACT_APP_SERVER_API}/api/upload`, requestOptions)
+  return fetch(`${API_URL}/api/upload`, requestOptions)
     .then((res) => {
       return res.text()
     });
 }
 
 export const getModel = (id) => {
-  return axios.post(`${process.env.REACT_APP_SERVER_API}/api/upload/${id}/result`)
+  return axios.post(`${API_URL}/api/upload/${id}/result`)
     .then((res) => res.data);
 }
 
 export const getStatus = (id) => {
-  return axios.post(`${process.env.REACT_APP_SERVER_API}/api/upload/${id}/status`)
+  return axios.post(`${API_URL}/api/upload/${id}/status`)
     .then((res) => {
       if (res.status === 404) {
         throw new Error('Not found');
