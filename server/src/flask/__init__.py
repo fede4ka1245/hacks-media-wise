@@ -1,9 +1,14 @@
+from io import BytesIO
+from threading import Thread
+
 from bson import ObjectId
 from flask import Flask, request
 from pandas import DataFrame, read_json
 
 from src.processing.preprocessing import main as preprocess
 from src.monogodb import mongodb_collection
+
+from src.processing.process_data import process_data
 
 flask_server = Flask(__name__)
 
@@ -15,14 +20,14 @@ def upload():
     file = request.files["file"]
 
     if file and file.filename != "":
-        data, ml_data, columns_with_not_enough_information, mean_std_info = preprocess(file)
-        insertion = mongodb_collection.insert_one({
-            "status": "processing",
-            "data": data.to_json(),
-            "ml_data": DataFrame(ml_data).to_json(),
-            "excluded_columns": columns_with_not_enough_information,
-            "mean_std_info": mean_std_info
-        })
+        insertion = mongodb_collection.insert_one({"status": "uploading"})
+
+        file_buffer = BytesIO()
+        file.save(file_buffer)
+
+        processing_thread = Thread(target=process_data(str(insertion.inserted_id), file_buffer), daemon=False)
+        processing_thread.start()
+
         return str(insertion.inserted_id)
     else:
         return "smth didn't happen"
