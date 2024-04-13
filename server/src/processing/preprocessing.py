@@ -3,6 +3,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 NEED_REPEATS_FOR_SEASON_FEATURE = 5
@@ -86,6 +87,17 @@ def fill_season_features(data: pd.DataFrame, season_features_data: dict) -> None
             data[key].bfill(inplace=True, limit=value[1])
 
 
+def delete_highly_correlated_features(data: pd.DataFrame):
+    corr_matrix = data.corr().abs()
+    upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+
+    to_drop = [column for column in upper_tri.columns if any(upper_tri[column] >= 0.95)]
+
+    data = data.drop(columns=to_drop)
+
+    return data
+
+
 def delete_bad_columns(data: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
     return (
         data.loc[:, data.notna().mean() >= REQUIRED_PERCENTAGE_OF_NON_MISSING_VALUES],
@@ -132,6 +144,8 @@ def preprocess(
 ) -> tuple[pd.DataFrame, pd.DataFrame, list[str], dict[str, dict[str, float]]]:
     season_features = find_season_features(data)
     fill_season_features(data, season_features)
+
+    data = pd.concat([delete_highly_correlated_features(data.select_dtypes(exclude=["datetime64[ns]"])), data.select_dtypes(include=["datetime64[ns]"])], axis=1)
     data, columns_with_not_enough_information = delete_bad_columns(data)
 
     ml_data, mean_std_info = scale_data(data)
