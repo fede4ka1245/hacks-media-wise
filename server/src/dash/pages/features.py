@@ -7,7 +7,7 @@ from pandas import read_json
 from src.monogodb import mongodb_collection
 
 
-dash.register_page(__name__, path_template="/<report_id>/features_plots/<feature_number>")
+dash.register_page(__name__, path_template="/api/<report_id>/features_plots/<feature_number>")
 
 
 def layout(report_id=None, feature_number=None, **kwargs):

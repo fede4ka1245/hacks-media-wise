@@ -8,7 +8,7 @@ from src.monogodb import mongodb_collection
 flask_server = Flask(__name__)
 
 
-@flask_server.route("/upload", methods=["POST"])
+@flask_server.route("/api/upload", methods=["POST"])
 def upload():
     if "file" not in request.files:
         return "kirill yourself"
@@ -28,7 +28,7 @@ def upload():
         return "smth didn't happen"
 
 
-@flask_server.route("/upload/<report_id>/status", methods=["GET", "POST"])
+@flask_server.route("/api/upload/<report_id>/status", methods=["GET", "POST"])
 def get_status(report_id: str):
     report = mongodb_collection.find_one({"_id": ObjectId(report_id)})
     if report is None:
@@ -37,7 +37,7 @@ def get_status(report_id: str):
     return report["status"]
 
 
-@flask_server.route("/upload/<report_id>/result", methods=["GET", "POST"])
+@flask_server.route("/api/upload/<report_id>/result", methods=["GET", "POST"])
 def get_results(report_id: str):
     report = mongodb_collection.find_one({"_id": ObjectId(report_id)})
     if report is None:
