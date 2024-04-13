@@ -49,10 +49,12 @@ def get_results(report_id: str):
         return "no report found", 404
 
     df = read_json(report["data"])
+    predicted_df = read_json(report["predicted_data"])
     chart_items = list()
     for feature_number, feature_name in enumerate(df.columns[3:], start=3):
-        chart_item = {"feature": feature_name, "chart_link": f"api/{report_id}/features_plots/{feature_number}"}
-        chart_items.append(chart_item)
+        if feature_name in predicted_df.columns:
+            chart_item = {"feature": feature_name, "chart_link": f"api/{report_id}/features_plots/{feature_number}"}
+            chart_items.append(chart_item)
 
     feature_weights_chart_link = f"api/{report_id}/importances"
 

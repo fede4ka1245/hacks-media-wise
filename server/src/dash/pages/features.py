@@ -32,5 +32,6 @@ def layout(report_id=None, feature_number=None, **kwargs):
 
         fig = px.line(df[["Пеиод__Начало нед", feature_name, "predicted"]], x="Пеиод__Начало нед", y=feature_name, color="predicted", line_shape="spline", markers=True)
         fig.add_vline(x=predicted_df["Пеиод__Начало нед"][0], annotation_text="Пронгозируемая дата", line_dash="dot")
+        fig.update_xaxes(type="date", range=[df["Пеиод__Начало нед"].min(), predicted_df["Пеиод__Начало нед"].max()])
 
         return dcc.Graph(figure=fig)
