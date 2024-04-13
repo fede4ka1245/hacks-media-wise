@@ -2,7 +2,7 @@ from bson import ObjectId
 from flask import Flask, request
 from pandas import DataFrame, read_json
 
-from processing.preprocessing import main as preprocess
+from src.processing.preprocessing import main as preprocess
 from src.monogodb import mongodb_collection
 
 flask_server = Flask(__name__)
