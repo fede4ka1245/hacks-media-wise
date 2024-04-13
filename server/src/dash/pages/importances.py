@@ -21,14 +21,13 @@ def layout(report_id=None, **kwargs):
         return html.Div(["Report not found"])
     else:
         shap_values = read_json(report["shap_values"])
-        ml_data = read_json(report["ml_data"])
+        val_values = read_json(report["val_values"])
         shap_values = shap_values.to_numpy()
 
-        ml_data = ml_data.select_dtypes(exclude=["int"])
-        ml_data.drop(columns=['1_KPI данные понедельно АлфаРМ_Продажи, рубли', '1_KPI данные понедельно АлфаРМ_Продажи, упаковки'], inplace=True)
-
-        shap.summary_plot(shap_values, ml_data, feature_names=["" for _ in range(ml_data.shape[1])], show=False)
+        shap.summary_plot(shap_values, val_values, show=False)
         fig = plt.gcf()
+        fig.set_figheight(5)
+        fig.set_figwidth(10)
         fig = mpl_to_plotly(fig)
         # shap.plots.beeswarm(Explanation(shap_values), color="red")
 
