@@ -6,7 +6,7 @@ import React from "react";
 import {Grid} from "@mui/material";
 import {Provider} from "react-redux";
 import store from "./store";
-import Summary from "./pages/summary/Summary";
+import Model from "./pages/Model/Model";
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           >
             <Routes>
               <Route path={routes.main} element={<Main />}/>
-              <Route path={routes.summary + '/:id'} element={<Summary />} />
+              <Route path={routes.model + '/:id'} element={<Model />} />
             </Routes>
           </Grid>
         </BrowserRouter>

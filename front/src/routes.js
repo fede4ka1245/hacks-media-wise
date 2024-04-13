@@ -1,5 +1,5 @@
 export const routes = {
   main: '/',
   upload: '/upload',
-  summary: '/summary'
+  model: '/model'
 }

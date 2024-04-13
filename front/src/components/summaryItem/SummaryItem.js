@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Grid, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
-import {getState} from "../../api";
+import {getStatus} from "../../api";
 
 const status = {
   created: {
@@ -23,13 +23,13 @@ const SummaryItem = ({ id }) => {
   const [state, setState] = useState('loading');
 
   const onClick = useCallback(() => {
-    navigate(routes.summary + '/' + id);
+    navigate(routes.model + '/' + id);
   }, [id]);
 
   useEffect(() => {
     let idInterval;
     const load = async () => {
-      await getState(id)
+      await getStatus(id)
         .then((state) => {
           if (state?.detail) {
             return;

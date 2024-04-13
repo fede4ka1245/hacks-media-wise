@@ -20,7 +20,7 @@ const Main = () => {
   const onChange = useCallback((files) => {
     dispatch(uploadFile(files[0]))
       .then((action) => {
-        navigate(routes.summary + '/' + action.payload.id);
+        navigate(routes.model + '/' + action.payload);
       });
   }, []);
 
@@ -33,7 +33,7 @@ const Main = () => {
   }, [id]);
 
   const openSummary = useCallback(() => {
-    navigate(routes.summary + '/' + id);
+    navigate(routes.model + '/' + id);
   }, [id]);
 
   const summaries = useMemo(() => {
@@ -76,7 +76,7 @@ const Main = () => {
       </Grid>
       <Grid mb={'var(--space-md)'}>
         <Button variant={'filled'} disabled={isIdDisabled} onClick={openSummary}>
-          Открыть эконометрическую модели
+          Открыть эконометрическую модель
         </Button>
       </Grid>
       <Typography
@@ -88,17 +88,17 @@ const Main = () => {
         mb={'var(--space-md)'}
         mt={'var(--space-md)'}
       >
-        Вы создали такие модели
+        Ваши эконометрические модели:
       </Typography>
       {!summaries?.length && <Typography
         fontWeight={'1000'}
-        fontSize={'25px'}
+        fontSize={'18px'}
         userSelect={'none'}
         fontFamily={'Nunito'}
         color={'var(--hint-color)'}
         mb={'var(--space-md)'}
       >
-        Вы пока не загружали и не открывали эконометрические модели
+        Нет сохраненных моделей
       </Typography>}
       {summaries?.length !== 0 && <>
         <Grid>

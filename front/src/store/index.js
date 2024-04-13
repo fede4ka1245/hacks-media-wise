@@ -1,40 +1,24 @@
 import {configureStore, createAsyncThunk} from '@reduxjs/toolkit';
 import React from 'react';
 import { createSlice } from '@reduxjs/toolkit';
-import { uploadFile as uploadFileApi, getTerms as getTermsApi, getTranscription as getTranscriptionApi, getSummary as getSummaryApi } from "../api";
+import { uploadFile as uploadFileApi, getModel as getModelApi } from "../api";
 import {pullState} from "../logic";
+import camelcaseKeys from 'camelcase-keys';
 
-const getTerms = async (id) => {
-  await pullState(id, 'terms');
+const getModel = async (id) => {
+  await pullState(id, 'ready');
 
-  return await getTermsApi(id);
+  return await getModelApi(id);
 }
 
-const getTranscription = async (id) => {
-  await pullState(id, 'transcription');
-
-  return await getTranscriptionApi(id);
-}
-
-const getSummary = async (id) => {
-  await pullState(id, 'summary');
-
-  return await getSummary(id);
-}
-
-const summary = {
-  isTranscriptionLoading: false,
-  isTermsLoading: false,
-  isSummaryLoading: false,
-  terms: [],
-  transcription: '',
-  summary: ''
+const model = {
+  isLoading: false,
 }
 
 const initialState = {
   loading: false,
   file: null,
-  summary
+  model
 };
 
 const uploadFile = createAsyncThunk(
@@ -44,24 +28,10 @@ const uploadFile = createAsyncThunk(
   }
 );
 
-const loadTerms = createAsyncThunk(
-  'main/loadTerms',
+const loadModel = createAsyncThunk(
+  'main/loadModel',
   async (id) => {
-    return await getTerms(id)
-  }
-);
-
-const loadTranscription = createAsyncThunk(
-  'main/loadTranscription',
-  async (id) => {
-    return await getTranscription(id)
-  }
-);
-
-const loadSummary = createAsyncThunk(
-  'main/loadSummary',
-  async (id) => {
-    return await getSummaryApi(id)
+    return await getModel(id)
   }
 );
 
@@ -75,39 +45,18 @@ export const mainSlice = createSlice({
     builder.addCase(uploadFile.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(loadTerms.pending, (state) => {
-      state.summary.isTermsLoading = true;
-    });
-    builder.addCase(loadTranscription.pending, (state) => {
-      state.summary.isTranscriptionLoading = true;
-    });
-    builder.addCase(loadSummary.pending, (state) => {
-      state.summary.isSummaryLoading = true;
+    builder.addCase(loadModel.pending, (state) => {
+      state.model.isLoading = true;
     });
 
-    builder.addCase(uploadFile.fulfilled, (state, action) => {
+    builder.addCase(uploadFile.fulfilled, (state) => {
       state.loading = false;
     });
-    builder.addCase(loadTerms.fulfilled, (state, action) => {
-      state.summary = {
-        ...state.summary,
-        isTermsLoading: false,
-        terms: action.payload
-      }
-    });
-    builder.addCase(loadSummary.fulfilled, (state, action) => {
-      state.summary = {
-        ...state.summary,
-        isSummaryLoading: false,
-        summary: action.payload
-      }
-    });
-    builder.addCase(loadTranscription.fulfilled, (state, action) => {
-      console.log(action.payload, 'here');
-      state.summary = {
-        ...state.summary,
-        isTranscriptionLoading: false,
-        transcription: action.payload
+    builder.addCase(loadModel.fulfilled, (state, action) => {
+      state.model = {
+        ...state.model,
+        isLoading: false,
+        ...camelcaseKeys(action.payload, { deep: true }),
       }
     });
   }
@@ -120,9 +69,7 @@ export const mainSlice = createSlice({
 
 export {
   uploadFile,
-  loadTerms,
-  loadTranscription,
-  loadSummary
+  loadModel
 };
 
 export default configureStore({
