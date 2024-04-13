@@ -18,12 +18,13 @@ def process_data(report_id: str, file):
             "mean_std_info": mean_std_info
         }})
 
-        predicted_data, shap_values = make_predict(ml_data, mean_std_info)
+        predicted_data, shap_values, val_data = make_predict(ml_data, mean_std_info)
 
         mongodb_collection.update_one({"_id": ObjectId(report_id)}, {"$set": {
             "status": "ready",
             "data": data.to_json(),
             "shap_values": DataFrame(shap_values).to_json(),
+            "val_values": val_data.to_json(),
             "predicted_data": predicted_data.to_json(),
             "ml_data": DataFrame(ml_data).to_json(),
             "excluded_columns": columns_with_not_enough_information,
