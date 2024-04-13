@@ -11,6 +11,21 @@
 @media screen and (max-width: 500px) {
   .dash-graph {
     width: 124% !important;
+    left: -12%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dash-graph {
+    width: 128% !important;
+    left: -14%;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .dash-graph {
+    width: 130% !important;
+    left: -15%;
   }
 }
 
