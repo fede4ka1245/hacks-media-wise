@@ -105,6 +105,7 @@ def scale_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, dict[str, fl
         ml_data[f"day{i}"] = ml_data[column].map(lambda x: x.day)
         ml_data[f"month{i}"] = ml_data[column].map(lambda x: x.month)
 
+    ml_timestamps = ml_data.select_dtypes(include=["datetime64[ns]"])
     ml_data = ml_data.select_dtypes(exclude=["datetime64[ns]"])
 
     ml_data_columns = ml_data.columns
@@ -121,6 +122,7 @@ def scale_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, dict[str, fl
 
     ml_data = pd.DataFrame(ml_data)
     ml_data.columns = ml_data_columns
+    ml_data = pd.concat([ml_data, ml_timestamps], axis=1)
 
     return ml_data, mean_std_info
 
