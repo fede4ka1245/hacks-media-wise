@@ -149,18 +149,3 @@ def main(
     data, ml_data, columns_with_not_enough_information, mean_std_info = preprocess(data)
 
     return data, ml_data, columns_with_not_enough_information, mean_std_info
-
-
-if __name__ == "__main__":
-    viz_data, ml_data, bad_columns, mean_std_info = main(
-        open("train/train.xlsx", mode="rb")
-    )
-
-    viz_data.to_csv("viz_data.csv", index=False)
-    pd.DataFrame(ml_data).to_csv("ml_data.csv", index=False)
-
-    with open("bad_columns.txt", mode="w", encoding="utf8") as f:
-        f.write("\n".join(bad_columns))
-
-    with open("mean_std_info.json", mode="w", encoding="utf8") as f:
-        json.dump(mean_std_info, f)
