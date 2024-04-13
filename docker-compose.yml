@@ -19,6 +19,9 @@ services:
       - '8888:8888'
     restart: always
   nginx:
+    depends_on:
+      - frontend
+      - back
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
