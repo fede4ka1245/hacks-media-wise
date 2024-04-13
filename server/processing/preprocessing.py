@@ -107,6 +107,8 @@ def scale_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, dict[str, fl
 
     ml_data = ml_data.select_dtypes(exclude=["datetime64[ns]"])
 
+    ml_data_columns = ml_data.columns
+
     scaler = StandardScaler()
     scaler.fit(ml_data)
 
@@ -116,6 +118,9 @@ def scale_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, dict[str, fl
         mean_std_info[column] = {"mean": scaler.mean_[i], "std": scaler.scale_[i]}
 
     ml_data = scaler.transform(ml_data)
+
+    ml_data = pd.DataFrame(ml_data)
+    ml_data.columns = ml_data_columns
 
     return ml_data, mean_std_info
 
