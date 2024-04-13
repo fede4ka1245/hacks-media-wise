@@ -18,3 +18,14 @@ services:
     ports:
       - '8888:8888'
     restart: always
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+      args:
+        NGINX_PORT: 80
+        FRONTEND_PORT: 8888
+        BACKEND_PORT: ${PORT}
+    ports:
+      - '80:80'
+    restart: always
