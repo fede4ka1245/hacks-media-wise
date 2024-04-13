@@ -261,14 +261,32 @@ const Model = () => {
         <PreloadContentPlacement
           isLoading={model?.isLoading}
         >
-          {model.charts?.slice(0, 2).map(({ chartLink, feature }) => (
-            <div style={{ maxWidth: '100%' }}>
+          <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
+            <Typography
+              fontWeight={'1000'}
+              fontSize={'28px'}
+              userSelect={'none'}
+              fontFamily={'Nunito'}
+              color={'white'}
+            >
+              Важность фич
+            </Typography>
+            <div style={{ width: '760px' }}>
+              <Chart
+                src={`${process.env.REACT_APP_SERVER_API || ''}/${model.featureWeightsChartLink}`}
+              />
+            </div>
+          </div>
+          {model.charts?.map(({ chartLink, feature }) => (
+            <div style={{ maxWidth: '100%', paddingTop: '52px' }}>
               <Typography
                 fontWeight={'1000'}
                 fontSize={'28px'}
                 userSelect={'none'}
                 fontFamily={'Nunito'}
                 color={'white'}
+                lineHeight={1.1}
+                mb={2}
               >
                 {feature}
               </Typography>
