@@ -53,12 +53,13 @@ def layout(report_id=None, feature_number=None, **kwargs):
             fig.add_vrect(x0=df[datetime_index][interval[0]], x1=df[datetime_index][interval[1]], row="all", col=1,
                           fillcolor="red", opacity=0.25, line_width=0)
 
-        CI = confidence_interval(df[feature_name].dropna())
-
-        fig.add_traces([
-            go.Scatter(x=df[datetime_index], y=df[feature_name] + CI, mode="lines", showlegend=False),
-            go.Scatter(x=df[datetime_index], y=df[feature_name] - CI, mode="lines", name='95% confidence interval',
-                       fill='tonexty')
-        ])
+        # CI = confidence_interval(df[feature_name].dropna())
+        #
+        # fig.add_traces([
+        #     go.Scatter(x=df[datetime_index], y=df[feature_name] + CI, mode="lines", showlegend=False,
+        #                fillcolor="rgba(0,0,0,0)", line_color="rgba(0,0,0,0)"),
+        #     go.Scatter(x=df[datetime_index], y=df[feature_name] - CI, mode='lines', line_color='rgba(0,0,0,0)',
+        #                name='95% confidence interval', fill='tonexty', fillcolor='rgba(255, 0, 0, 0.2)')
+        # ])
 
         return dcc.Graph(figure=fig)
