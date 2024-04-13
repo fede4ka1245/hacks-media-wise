@@ -1,14 +1,14 @@
 version: '3.9'
 services:
-#  back:
-#    build:
-#      context: server
-#      dockerfile: ./Dockerfile
-#    ports:
-#      - '3333:3333'
-#    restart: always
-#    env_file:
-#      - .env
+  back:
+    build:
+      context: server
+      dockerfile: ./Dockerfile
+    ports:
+      - '8050:8050'
+    restart: always
+    env_file:
+      - .env
   frontend:
     build:
       context: front
