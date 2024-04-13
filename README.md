@@ -1,6 +1,6 @@
 # Media Wise. Сервис для построенения эконометрических моделей
 
-## Demo 
+## Demo
 https://media-wise.bobs-ai.ru
 
 ## Запуск решения
