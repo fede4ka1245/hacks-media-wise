@@ -1,10 +1,17 @@
 .dash-graph {
   width: 110% !important;
-  height: 100% !important;
+  height: 110% !important;
   left: -5%;
   position: absolute !important;
   padding: 0 !important;
   margin: 0 !important;
+}
+
+
+@media screen and (max-width: 500px) {
+  .dash-graph {
+    width: 124% !important;
+  }
 }
 
 .bg {
@@ -34,4 +41,8 @@ text {
 html, body {
   background: rgb(33, 33, 33);
   overflow: hidden;
+}
+
+.xtitle, .ytitle {
+  display: none;
 }

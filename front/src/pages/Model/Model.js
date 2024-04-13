@@ -261,8 +261,8 @@ const Model = () => {
         <PreloadContentPlacement
           isLoading={model?.isLoading}
         >
-          {model.charts?.map(({ chartLink, feature }) => (
-            <div>
+          {model.charts?.slice(0, 2).map(({ chartLink, feature }) => (
+            <div style={{ maxWidth: '100%' }}>
               <Typography
                 fontWeight={'1000'}
                 fontSize={'28px'}

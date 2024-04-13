@@ -16,9 +16,9 @@ const Chart = ({ src }) => {
   }, [inView])
 
   return (
-    <Grid position={'relative'} ref={ref} minWidth={480} width={'100%'}>
+    <Grid position={'relative'} ref={ref} minHeight={480} maxWidth={'100%'} overflow={'hidden'}>
       <Backdrop
-        sx={{ color: '#fff', zIndex: 100, position: 'absolute' }}
+        sx={{ color: '#fff', zIndex: 100, position: 'absolute', width: '100%', height: '100%' }}
         open={isLoading}
         onClick={() => {}}
       >
