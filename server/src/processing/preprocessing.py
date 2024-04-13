@@ -158,6 +158,7 @@ def main(
 ) -> tuple[pd.DataFrame, pd.DataFrame, list[str], dict[str, dict[str, float]]]:
     header_data = pd.read_excel(fileobject, nrows=5)
     data = pd.read_excel(fileobject, skiprows=5, na_values=["", 0.0, " ", "\t"])
+    data.convert_dtypes()
     data.columns = get_renamed_columns(header_data)
 
     data, ml_data, columns_with_not_enough_information, mean_std_info = preprocess(data)
