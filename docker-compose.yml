@@ -1,14 +1,14 @@
 version: '3.9'
 services:
-  back:
-    build:
-      context: server
-      dockerfile: ./Dockerfile
-    ports:
-      - '8000:8000'
-    restart: always
-    env_file:
-      - .env
+#  back:
+#    build:
+#      context: server
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - '3333:3333'
+#    restart: always
+#    env_file:
+#      - .env
   frontend:
     build:
       context: front
@@ -16,5 +16,5 @@ services:
       args:
         BACKEND_URL: ${BACKEND_URL}
     ports:
-      - '3000:3000'
+      - '8888:8888'
     restart: always

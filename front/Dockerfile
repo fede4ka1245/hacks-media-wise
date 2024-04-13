@@ -6,5 +6,5 @@ RUN npm i
 RUN export REACT_APP_SERVER_API=$BACKEND_URL && \
     export NODE_ENV="production" && \
     npm run build
-EXPOSE 3000
-CMD [ "npx", "serve", "-s", "build" ]
+EXPOSE 8888
+CMD [ "npx", "serve", "-l", "8888", "-s", "build" ]

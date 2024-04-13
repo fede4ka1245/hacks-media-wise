@@ -12,7 +12,7 @@ if __name__ == "__main__":
     if not parsed_arguments.worker:
         print("starting server")
         import uvicorn
-        uvicorn.run("src.server:app", reload=True, host='0.0.0.0')
+        uvicorn.run("src.server:app", reload=True, host='0.0.0.0', port=3333)
     else:
         print("starting worker")
         from src.worker import main as worker_main
