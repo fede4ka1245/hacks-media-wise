@@ -5,6 +5,5 @@ ARG BACKEND_URL
 
 COPY . .
 RUN pip install -r requirements.txt
-COPY . .
 
 ENTRYPOINT [ "python", "main.py" ]

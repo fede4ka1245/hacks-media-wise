@@ -1,14 +1,48 @@
-import React from 'react';
-import {Grid} from "@mui/material";
+import React, {useLayoutEffect, useState} from 'react';
+import {Backdrop, CircularProgress, Grid} from "@mui/material";
 import styles from './Chart.module.css';
+import {useInView} from "react-intersection-observer";
 
 const Chart = ({ src }) => {
+  const [entered, setEntered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { ref, inView } = useInView();
+
+  useLayoutEffect(() => {
+    if (inView && !entered) {
+      setEntered(true);
+      setIsLoading(true)
+    }
+  }, [inView])
+
   return (
-    <Grid width={'100%'}>
-      <iframe
+    <Grid position={'relative'} ref={ref} minWidth={480} width={'100%'}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: 100, position: 'absolute' }}
+        open={isLoading}
+        onClick={() => {}}
+      >
+        <Grid
+          width={'90px'}
+          height={'90px'}
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          position={'relative'}
+        >
+          <CircularProgress
+            sx={{
+              color: 'var(--primary-color)'
+            }}
+          />
+        </Grid>
+      </Backdrop>
+      {entered && <iframe
+        onLoad={() => setTimeout(() => setIsLoading(false), 2400)}
         className={styles.main}
         src={src}
-      />
+      />}
     </Grid>
   );
 };
