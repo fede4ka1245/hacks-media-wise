@@ -1,8 +1,6 @@
 #!/bin/bash
 
-if ! test -f ./.env; then
-  cp .env.example .env
-fi
+cp .env.example .env
 
 git pull origin main
 docker compose up -d --build
