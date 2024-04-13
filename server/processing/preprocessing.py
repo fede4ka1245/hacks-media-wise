@@ -114,7 +114,7 @@ def scale_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, dict[str, fl
 
     mean_std_info = {}
 
-    for i, column in enumerate(range(data.shape[1])):
+    for i, column in enumerate(ml_data.columns):
         mean_std_info[column] = {"mean": scaler.mean_[i], "std": scaler.scale_[i]}
 
     ml_data = scaler.transform(ml_data)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
     pd.DataFrame(ml_data).to_csv("ml_data.csv", index=False)
 
     with open("bad_columns.txt", mode="w", encoding="utf8") as f:
-        f.write("\n".join(ml_data))
+        f.write("\n".join(bad_columns))
 
     with open("mean_std_info.json", mode="w", encoding="utf8") as f:
         json.dump(mean_std_info, f)
