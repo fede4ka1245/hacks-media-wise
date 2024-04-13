@@ -3,7 +3,7 @@ from bson import ObjectId
 from dash import html, dcc
 from pandas import read_json
 
-from server.src.monogodb import mongodb_collection
+from src.monogodb import mongodb_collection
 
 
 dash.register_page(__name__, path_template="/<report_id>/importances_plot")

@@ -4,7 +4,7 @@ from dash import html, dcc
 import plotly.express as px
 from pandas import read_json
 
-from server.src.monogodb import mongodb_collection
+from src.monogodb import mongodb_collection
 
 
 dash.register_page(__name__, path_template="/<report_id>/features_plots/<feature_number>")

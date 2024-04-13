@@ -2,8 +2,8 @@ from bson import ObjectId
 from flask import Flask, request
 from pandas import DataFrame, read_json
 
-from server.processing.preprocessing import main as preprocess
-from server.src.monogodb import mongodb_collection
+from processing.preprocessing import main as preprocess
+from src.monogodb import mongodb_collection
 
 flask_server = Flask(__name__)
 
