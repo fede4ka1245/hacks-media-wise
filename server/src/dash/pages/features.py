@@ -35,8 +35,10 @@ def layout(report_id=None, feature_number=None, **kwargs):
 
         fig = px.scatter(df[[datetime_index, feature_name, "predicted"]], x=datetime_index, y=feature_name,
                          color="predicted", trendline="ols")
+        fig.update_yaxes(visible=False, showticklabels=False)
+        fig.update_xaxes(visible=False, showticklabels=False)
         fig.update_traces(mode="lines")
-        fig.add_vline(x=predicted_df[datetime_index][0], annotation_text="Пронгозируемая дата", line_dash="dot")
+        fig.add_vline(x=predicted_df[datetime_index][0], annotation_text="Прогноз", line_dash="dot")
         fig.update_xaxes(type="date", range=[df[datetime_index].min(), predicted_df[datetime_index].max()])
 
         missing_data_intervals = []
