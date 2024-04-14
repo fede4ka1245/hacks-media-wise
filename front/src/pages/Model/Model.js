@@ -296,7 +296,7 @@ const Model = () => {
             >
               Важность фич
             </Typography>
-            <div style={{ borderRadius: '20px', overflow: 'hidden', background: 'var(--bg-color)' }}>
+            <div style={{ borderRadius: '20px', overflow: 'auto', background: 'var(--bg-color)' }}>
               <div style={{ width: '760px', transform: 'translateX(-5%)' }} id={'tab1'}>
                 <Chart
                   loaderStyle={{ background: 'unset', transform: 'translateX(5%)' }}

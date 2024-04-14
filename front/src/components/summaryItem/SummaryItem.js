@@ -5,17 +5,17 @@ import {routes} from "../../routes";
 import {getStatus} from "../../api";
 
 const status = {
-  created: {
+  uploading: {
     color: 'var(--primary-color)',
     name: 'Загружаю файлик'
   },
-  died: {
-    color: 'var(--error-color)',
-    name: 'Что то пошло не так:('
+  processing: {
+    color: 'var(--primary-color)',
+    name: 'Обрабатываем'
   },
-  loading: {
-    color: 'red',
-    name: 'loading'
+  ready: {
+    color: 'var(--success-color)',
+    name: 'Готово!'
   }
 }
 const SummaryItem = ({ id }) => {
