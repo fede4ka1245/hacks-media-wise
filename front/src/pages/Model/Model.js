@@ -372,9 +372,9 @@ const Model = () => {
             pl={'var(--space-sm)'}
             alignItems={'center'}
             mb={2}
-            style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
+            style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 101 }}
           >
-            <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
+            <Grid pr={'var(--space-md)'} className={styles.desktop}>
               <Tappable onClick={onMainPageClick}>
                 <Grid
                   display={'flex'}

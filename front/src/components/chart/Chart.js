@@ -18,7 +18,7 @@ const Chart = ({ src, loaderStyle }) => {
   return (
     <Grid position={'relative'} ref={ref} minHeight={480} maxWidth={'100%'} overflow={'hidden'}>
       <Backdrop
-        sx={{ color: '#fff', zIndex: 100, position: 'absolute', width: '100%', height: '100%', ...loaderStyle }}
+        sx={{ color: '#fff', zIndex: 99, position: 'absolute', width: '100%', height: '100%', ...loaderStyle }}
         open={isLoading}
         onClick={() => {}}
       >

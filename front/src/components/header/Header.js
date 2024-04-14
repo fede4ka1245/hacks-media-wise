@@ -11,7 +11,7 @@ const Header = () => {
       top={0}
       left={0}
       height={'var(--header-height)'}
-      style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 100000000 }}
+      style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 100 }}
       borderBottom={'var(--element-border)'}
       justifyContent={'center'}
     >
