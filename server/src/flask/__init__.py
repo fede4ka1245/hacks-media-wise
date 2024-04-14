@@ -9,6 +9,7 @@ from src.processing.preprocessing import main as preprocess
 from src.monogodb import mongodb_collection
 
 from src.processing.process_data import process_data
+from src.processing.reprocess_data import reprocess_data
 
 flask_server = Flask(__name__)
 
@@ -62,3 +63,15 @@ def get_results(report_id: str):
         "feature_weights_chart_link": feature_weights_chart_link,
         "charts": chart_items
     }
+
+
+@flask_server.route("/api/upload/<report_id>/recount", methods=["POST"])
+def recount(report_id: str):
+    report = mongodb_collection.find_one({"_id": ObjectId(report_id)})
+    report["status"] = "processing"
+    mongodb_collection.update_one({"_id": ObjectId(report_id)}, {"$set": report})
+
+    processing_thread = Thread(target=reprocess_data(report_id), daemon=False)
+    processing_thread.start()
+
+    return "started", 200
