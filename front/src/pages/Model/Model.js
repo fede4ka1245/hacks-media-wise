@@ -4,7 +4,7 @@ import {FormControl, Grid, InputLabel, MenuItem, Typography} from "@mui/material
 import Tabs from "../../ui/tabs/Tabs";
 import Tab from "../../ui/tab/Tab";
 import Tappable from "../../ui/tappable/Tappable";
-import {ArrowBackIosRounded, GridGoldenratioRounded} from "@mui/icons-material";
+import {ArrowBackIosRounded} from "@mui/icons-material";
 import {useNavigate, useParams} from "react-router-dom";
 import {routes} from "../../routes";
 import {useDispatch, useSelector} from "react-redux";
@@ -19,6 +19,48 @@ import Input from "../../ui/input/Input";
 
 const tabs = {
 }
+
+const dates = [
+  '04.09.2023',
+  '11.09.2023',
+  '18.09.2023',
+  '25.09.2023',
+  '02.10.2023',
+  '09.10.2023',
+  '16.10.2023',
+  '23.10.2023',
+  '30.10.2023',
+  '06.11.2023',
+  '13.11.2023',
+  '20.11.2023',
+  '27.11.2023',
+  '04.12.2023',
+  '11.12.2023',
+  '18.12.2023',
+  '25.12.2023',
+  '01.01.2024',
+  '08.01.2024',
+  '15.01.2024',
+  '22.01.2024',
+  '29.01.2024',
+  '05.02.2024',
+  '12.02.2024',
+  '19.02.2024',
+  '26.02.2024',
+  '04.03.2024',
+  '11.03.2024',
+  '18.03.2024'
+];
+
+const features = [
+  '10_Медиа ТВ (Моделироуемый бренд)_(1)ТВ, trp(Ж 30-60 ВС)',
+  '10_Медиа ТВ (Моделироуемый бренд)_(1)ТВ, рубли',
+  '10_Медиа ТВ (Моделироуемый бренд)_(1)ТВ, охват 5+(Ж 30-60 ВС)',
+  '10_Медиа ТВ (Моделироуемый бренд)_(тотал)ТВ, trp(Ж 30-60 ВС)',
+  '10_Медиа ТВ (Моделироуемый бренд)_(тотал)ТВ, рубли',
+  '10_Медиа ТВ (Моделироуемый бренд)_(тотал)ТВ, охват 5+(Ж 30-60 ВС)',
+  '11_Медиа Диджитал (Моделируемый бренд)_Диджитал, рубли'
+];
 
 function elementInViewport(el) {
   var top = el.offsetTop;
@@ -43,6 +85,12 @@ const Model = () => {
   } = useSelector((state) => state.main);
   const dispatch = useDispatch();
   const { id } = useParams();
+
+  const [form, setForm] = useState({
+    date: '',
+    feature: '',
+    percent: ''
+  });
 
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
@@ -127,6 +175,8 @@ const Model = () => {
     setTargetTab(tab);
   }, [targetTabs]);
 
+  console.log(form);
+
   useEffect(() => {
     return () => {
       eventBus.emit(events.onSummaryExit);
@@ -154,6 +204,8 @@ const Model = () => {
       }
     }
   }, [targetTabs]);
+
+  const isSubmitDisabled = !form.feature || !form.date || !form.percent
 
   if (id === undefined || isError) {
     return (
@@ -312,13 +364,13 @@ const Model = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={''}
+            value={form.feature}
             label="Фича"
-            onChange={() => {}}
+            onChange={(event) => setForm((form) => ({ ...form, feature: event.target.value }))}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {features.map((feature) => (
+              <MenuItem key={feature} value={feature}>{feature}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl fullWidth>
@@ -326,23 +378,23 @@ const Model = () => {
           <Select
             labelId="select-date-label"
             id="select-date"
-            value={''}
+            value={form.date}
             label="Дата"
-            onChange={() => {}}
+            onChange={(event) => setForm((form) => ({ ...form, date: event.target.value }))}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {dates.map((feature) => (
+              <MenuItem key={feature} value={feature}>{feature}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Input
           type="number"
           label={'Изменить на стоолько процентов'}
           fullWidth
-          value={''}
-          onChange={() => {}}
+          value={form.percent}
+          onChange={(event) => setForm((form) => ({ ...form, percent: event.target.value }))}
         />
-        <Button variant={'filled'} disabled={true} onClick={() => {}}>
+        <Button variant={'filled'} disabled={isSubmitDisabled} onClick={() => {}}>
           Перестроить
         </Button>
       </Grid>
