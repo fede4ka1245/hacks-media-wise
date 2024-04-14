@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import PreloadContentPlacement from "../../components/preloadContentPlacement/PreloadContentPlacement";
-import {Grid, Typography} from "@mui/material";
+import {FormControl, Grid, InputLabel, MenuItem, Typography} from "@mui/material";
 import Tabs from "../../ui/tabs/Tabs";
 import Tab from "../../ui/tab/Tab";
 import Tappable from "../../ui/tappable/Tappable";
-import { ArrowBackIosRounded} from "@mui/icons-material";
+import {ArrowBackIosRounded, GridGoldenratioRounded} from "@mui/icons-material";
 import {useNavigate, useParams} from "react-router-dom";
 import {routes} from "../../routes";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,7 +13,9 @@ import {throttle} from "lodash";
 import styles from './Model.module.css';
 import {eventBus, events, getSummariesHistory, setSummariesHistory} from "../../logic";
 import Button from "../../ui/button/Button";
+import Select from "../../ui/select/Select";
 import Chart from "../../components/chart/Chart";
+import Input from "../../ui/input/Input";
 
 const tabs = {
 }
@@ -195,18 +197,6 @@ const Model = () => {
 
   return (
     <Grid>
-      <Typography
-        fontFamily={'Nunito'}
-        fontSize={'24px'}
-        lineHeight={1.2}
-        userSelect={'none'}
-        color={'var(--text-secondary-color)'}
-        mt={'var(--space-md)'}
-        mb={'var(--space-md)'}
-      >
-        ID эконометрической модели: {id} <br/>
-        Вы можете вернуться к ней с главной страницы.
-      </Typography>
       <Grid className={styles.mobile}>
         <Tappable onClick={onMainPageClick}>
           <Grid
@@ -281,6 +271,80 @@ const Model = () => {
             <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
           ))}
         </Tabs>
+      </Grid>
+      <Typography
+        fontFamily={'Nunito'}
+        fontSize={'32px'}
+        lineHeight={1.2}
+        userSelect={'none'}
+        fontWeight={'bold'}
+        color={'var(--text-secondary-color)'}
+        mt={'var(--space-md)'}
+        mb={'var(--space-md)'}
+      >
+        Модель #{id}
+      </Typography>
+      <Grid
+        zIndex={100}
+        display={'flex'}
+        width={'100%'}
+        flexDirection={'column'}
+        top={0}
+        borderRadius={'var(--border-radius-sm)'}
+        p={'var(--space-sm)'}
+        gap={1}
+        p={2}
+        style={{ backgroundColor: 'var(--bg-color)', zIndex: 1000000000000 }}
+      >
+        <Typography
+          fontFamily={'Nunito'}
+          fontSize={'22px'}
+          lineHeight={1.1}
+          userSelect={'none'}
+          fontWeight={'bold'}
+          mb={2}
+          color={'var(--text-secondary-color)'}
+        >
+          Перестроить график
+        </Typography>
+        <FormControl fullWidth>
+          <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="demo-simple-select-label">Фича</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={''}
+            label="Фича"
+            onChange={() => {}}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="select-date-label">Дата</InputLabel>
+          <Select
+            labelId="select-date-label"
+            id="select-date"
+            value={''}
+            label="Дата"
+            onChange={() => {}}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+        <Input
+          type="number"
+          label={'Изменить на стоолько процентов'}
+          fullWidth
+          value={''}
+          onChange={() => {}}
+        />
+        <Button variant={'filled'} disabled={true} onClick={() => {}}>
+          Перестроить
+        </Button>
       </Grid>
       <Grid mt={'var(--space-md)'} width={'100%'}>
         <PreloadContentPlacement
