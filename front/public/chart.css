@@ -11,7 +11,6 @@
   transform: translateX(5%) !important;
 }
 
-
 @media screen and (max-width: 500px) {
   .dash-graph {
     width: 124% !important;
