@@ -42,12 +42,36 @@ const Model = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const [targetTab, setTargetTab] = useState(tabs.terms);
-  const targetTabs = useMemo(() => {
-    return Object.values(tabs);
-  }, []);
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
+  const charts = useMemo(() => {
+    return model.charts?.map((chart) => ({
+      ...chart,
+      feature: chart.feature?.replaceAll("_", ". ").replaceAll(". .", ".")
+    }));
+  }, [model]);
+  const [targetTab, setTargetTab] = useState(tabs.terms);
+  const targetTabs = useMemo(() => {
+    if (!charts) {
+      return [];
+    }
+
+    setTargetTab({ label: 'Важность фич', id: 'tab1' })
+
+    window.targetTabs = [
+      { label: 'Важность фич', id: 'tab1' },
+      ...charts?.map((chart, index) => ({
+        label: `${chart.feature.slice(0, 8)}...`, id: `tab${index + 2}`
+      }))
+    ];
+
+    return [
+      { label: 'Важность фич', id: 'tab1' },
+      ...charts?.map((chart, index) => ({
+        label: `${chart.feature.slice(0, 8)}...`, id: `tab${index + 2}`
+      }))
+    ];
+  }, [charts]);
 
   // const downloadTxtFile = useCallback(() => {
   //   const makeTextFile = function (text) {
@@ -94,12 +118,12 @@ const Model = () => {
   }, []);
 
   const onTabChange = useCallback(async (_, value) => {
-    const tab = Object.values(tabs).find(({ id }) => value === id);
+    const tab = targetTabs.find(({ id }) => value === id);
 
     const rect = document.getElementById(tab.id).getBoundingClientRect();
     window.scrollTo(0, window.scrollY + (rect.y - 150));
     setTargetTab(tab);
-  }, []);
+  }, [targetTabs]);
 
   useEffect(() => {
     return () => {
@@ -108,14 +132,14 @@ const Model = () => {
   }, []);
 
   useEffect(() => {
-    if (tabs.length) {
-      const ids = [...Object.values(tabs).map(({ id }) => id)];
+    if (window.targetTabs?.length) {
+      const ids = [...window.targetTabs.map(({ id }) => id)];
 
       window.onscroll = throttle(() => {
         try {
           for (const id of ids) {
             if (elementInViewport(document.getElementById(id))) {
-              const tab = Object.values(tabs).find((tab) => id === tab?.id);
+              const tab = window.targetTabs.find((tab) => id === tab?.id);
               setTargetTab(tab);
               return;
             }
@@ -127,7 +151,7 @@ const Model = () => {
         window.onscroll = null;
       }
     }
-  }, []);
+  }, [targetTabs]);
 
   if (id === undefined || isError) {
     return (
@@ -218,9 +242,9 @@ const Model = () => {
         borderRadius={'var(--border-radius-sm)'}
         pl={'var(--space-sm)'}
         alignItems={'center'}
-        style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 100 }}
+        style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
       >
-        <Grid pr={'var(--space-md)'} className={styles.desktop}>
+        <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
           <Tappable onClick={onMainPageClick}>
             <Grid
               display={'flex'}
@@ -229,6 +253,7 @@ const Model = () => {
               borderRadius={'var(--border-radius-sm)'}
               backgroundColor={'var(--bg-color)'}
               p={'10px 5px'}
+              minWidth={'140px'}
               border={'1px solid var(--primary-color)'}
             >
               <ArrowBackIosRounded fontSize={'20px'} sx={{ color: 'var(--primary-color)' }} />
@@ -246,16 +271,16 @@ const Model = () => {
             </Grid>
           </Tappable>
         </Grid>
-        {/*<Tabs*/}
-        {/*  value={targetTab.id}*/}
-        {/*  onChange={onTabChange}*/}
-        {/*  aria-label="date-tabs"*/}
-        {/*  variant="scrollable"*/}
-        {/*>*/}
-        {/*  {targetTabs.map((tab) => (*/}
-        {/*    <Tab key={tab.id} label={tab.label} value={tab.id} />*/}
-        {/*  ))}*/}
-        {/*</Tabs>*/}
+        <Tabs
+          value={targetTab?.id}
+          onChange={onTabChange}
+          aria-label="date-tabs"
+          variant="scrollable"
+        >
+          {targetTabs.map((tab) => (
+            <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
+          ))}
+        </Tabs>
       </Grid>
       <Grid mt={'var(--space-md)'} width={'100%'}>
         <PreloadContentPlacement
@@ -271,14 +296,17 @@ const Model = () => {
             >
               Важность фич
             </Typography>
-            <div style={{ width: '760px' }}>
-              <Chart
-                src={`${process.env.REACT_APP_SERVER_API || ''}/${model.featureWeightsChartLink}`}
-              />
+            <div style={{ borderRadius: '20px', overflow: 'hidden', background: 'var(--bg-color)' }}>
+              <div style={{ width: '760px', transform: 'translateX(-5%)' }} id={'tab1'}>
+                <Chart
+                  loaderStyle={{ background: 'unset', transform: 'translateX(5%)' }}
+                  src={`${process.env.REACT_APP_SERVER_API || ''}/${model.featureWeightsChartLink}`}
+                />
+              </div>
             </div>
           </div>
-          {model.charts?.map(({ chartLink, feature }) => (
-            <div style={{ maxWidth: '100%', paddingTop: '52px' }}>
+          {charts?.map(({ chartLink, feature }, index) => (
+            <div style={{ maxWidth: '100%', paddingTop: '52px' }} id={`tab${index + 2}`}>
               <Typography
                 fontWeight={'1000'}
                 fontSize={'28px'}

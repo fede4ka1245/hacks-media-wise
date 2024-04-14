@@ -3,7 +3,7 @@ import {Backdrop, CircularProgress, Grid} from "@mui/material";
 import styles from './Chart.module.css';
 import {useInView} from "react-intersection-observer";
 
-const Chart = ({ src }) => {
+const Chart = ({ src, loaderStyle }) => {
   const [entered, setEntered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { ref, inView } = useInView();
@@ -18,7 +18,7 @@ const Chart = ({ src }) => {
   return (
     <Grid position={'relative'} ref={ref} minHeight={480} maxWidth={'100%'} overflow={'hidden'}>
       <Backdrop
-        sx={{ color: '#fff', zIndex: 100, position: 'absolute', width: '100%', height: '100%' }}
+        sx={{ color: '#fff', zIndex: 100, position: 'absolute', width: '100%', height: '100%', ...loaderStyle }}
         open={isLoading}
         onClick={() => {}}
       >
