@@ -5,6 +5,7 @@ from dash import html, dcc
 from pandas import read_json
 import matplotlib.pyplot as plt
 from plotly.tools import mpl_to_plotly
+from plotly.subplots import make_subplots
 
 from src.monogodb import mongodb_collection
 
@@ -30,6 +31,6 @@ def layout(report_id=None, **kwargs):
         tick_values, tick_texts = list(plt.yticks()[0]), list(map(lambda text: text._text, plt.yticks()[1]))
 
         plotly_fig = mpl_to_plotly(mpl_fig)
-        plotly_fig.update_yaxes(tickvals=tick_values, ticktext=tick_texts)
+        plotly_fig.update_yaxes(tickvals=tick_values, ticktext=tick_texts, side="right")
 
         return dcc.Graph(figure=plotly_fig)

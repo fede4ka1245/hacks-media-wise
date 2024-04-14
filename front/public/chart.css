@@ -1,10 +1,32 @@
 .dash-graph {
   width: 110% !important;
-  height: 100% !important;
+  height: 110% !important;
   left: -5%;
   position: absolute !important;
   padding: 0 !important;
   margin: 0 !important;
+}
+
+
+@media screen and (max-width: 500px) {
+  .dash-graph {
+    width: 124% !important;
+    left: -12%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dash-graph {
+    width: 128% !important;
+    left: -14%;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .dash-graph {
+    width: 130% !important;
+    left: -15%;
+  }
 }
 
 .bg {
@@ -34,4 +56,8 @@ text {
 html, body {
   background: rgb(33, 33, 33);
   overflow: hidden;
+}
+
+.xtitle, .ytitle {
+  display: none;
 }
