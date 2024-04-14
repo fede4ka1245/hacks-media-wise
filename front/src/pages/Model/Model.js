@@ -16,6 +16,7 @@ import Button from "../../ui/button/Button";
 import Select from "../../ui/select/Select";
 import Chart from "../../components/chart/Chart";
 import Input from "../../ui/input/Input";
+import axios from "axios";
 
 const tabs = {
 }
@@ -51,6 +52,8 @@ const dates = [
   '11.03.2024',
   '18.03.2024'
 ];
+
+const API_URL = process.env.REACT_APP_SERVER_API || ''
 
 const features = [
   '10_Медиа ТВ (Моделироуемый бренд)_(1)ТВ, trp(Ж 30-60 ВС)',
@@ -100,6 +103,7 @@ const Model = () => {
       feature: chart.feature?.replaceAll("_", ". ").replaceAll(". .", ".")
     }));
   }, [model]);
+  const [isLoading, setIsLoading] = useState(false);
   const [targetTab, setTargetTab] = useState(tabs.terms);
   const targetTabs = useMemo(() => {
     if (!charts) {
@@ -175,8 +179,6 @@ const Model = () => {
     setTargetTab(tab);
   }, [targetTabs]);
 
-  console.log(form);
-
   useEffect(() => {
     return () => {
       eventBus.emit(events.onSummaryExit);
@@ -205,7 +207,15 @@ const Model = () => {
     }
   }, [targetTabs]);
 
-  const isSubmitDisabled = !form.feature || !form.date || !form.percent
+  const isSubmitDisabled = !form.feature || !form.date || !form.percent;
+
+  const onSubmit = () => {
+    setIsLoading(true)
+    axios.post(`${API_URL}/api/upload/${id}/recount`, form)
+      .finally(() => {
+        document.location.reload();
+      })
+  }
 
   if (id === undefined || isError) {
     return (
@@ -274,134 +284,134 @@ const Model = () => {
           </Grid>
         </Tappable>
       </Grid>
-      <Grid
-        zIndex={100}
-        position={'sticky'}
-        display={'flex'}
-        width={'100%'}
-        top={0}
-        height={'calc(var(--header-height) - 5px)'}
-        borderRadius={'var(--border-radius-sm)'}
-        pl={'var(--space-sm)'}
-        alignItems={'center'}
-        style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
-      >
-        <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
-          <Tappable onClick={onMainPageClick}>
-            <Grid
-              display={'flex'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              borderRadius={'var(--border-radius-sm)'}
-              backgroundColor={'var(--bg-color)'}
-              p={'10px 5px'}
-              minWidth={'140px'}
-              border={'1px solid var(--primary-color)'}
-            >
-              <ArrowBackIosRounded fontSize={'20px'} sx={{ color: 'var(--primary-color)' }} />
-              <Typography
-                fontWeight={'1000'}
-                fontSize={'16px'}
-                userSelect={'none'}
-                fontFamily={'Nunito'}
-                pl={'var(--space-sm)'}
-                color={'var(--primary-color)'}
-                className={styles.desktop}
-              >
-                На главную
-              </Typography>
-            </Grid>
-          </Tappable>
-        </Grid>
-        <Tabs
-          value={targetTab?.id}
-          onChange={onTabChange}
-          aria-label="date-tabs"
-          variant="scrollable"
-        >
-          {targetTabs.map((tab) => (
-            <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
-          ))}
-        </Tabs>
-      </Grid>
-      <Typography
-        fontFamily={'Nunito'}
-        fontSize={'32px'}
-        lineHeight={1.2}
-        userSelect={'none'}
-        fontWeight={'bold'}
-        color={'var(--text-secondary-color)'}
-        mt={'var(--space-md)'}
-        mb={'var(--space-md)'}
-      >
-        Модель #{id}
-      </Typography>
-      <Grid
-        zIndex={100}
-        display={'flex'}
-        width={'100%'}
-        flexDirection={'column'}
-        top={0}
-        borderRadius={'var(--border-radius-sm)'}
-        p={'var(--space-sm)'}
-        gap={1}
-        p={2}
-        style={{ backgroundColor: 'var(--bg-color)', zIndex: 1000000000000 }}
-      >
-        <Typography
-          fontFamily={'Nunito'}
-          fontSize={'22px'}
-          lineHeight={1.1}
-          userSelect={'none'}
-          fontWeight={'bold'}
-          mb={2}
-          color={'var(--text-secondary-color)'}
-        >
-          Перестроить график
-        </Typography>
-        <FormControl fullWidth>
-          <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="demo-simple-select-label">Фича</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={form.feature}
-            label="Фича"
-            onChange={(event) => setForm((form) => ({ ...form, feature: event.target.value }))}
-          >
-            {features.map((feature) => (
-              <MenuItem key={feature} value={feature}>{feature}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="select-date-label">Дата</InputLabel>
-          <Select
-            labelId="select-date-label"
-            id="select-date"
-            value={form.date}
-            label="Дата"
-            onChange={(event) => setForm((form) => ({ ...form, date: event.target.value }))}
-          >
-            {dates.map((feature) => (
-              <MenuItem key={feature} value={feature}>{feature}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Input
-          type="number"
-          label={'Изменить на стоолько процентов'}
-          fullWidth
-          value={form.percent}
-          onChange={(event) => setForm((form) => ({ ...form, percent: event.target.value }))}
-        />
-        <Button variant={'filled'} disabled={isSubmitDisabled} onClick={() => {}}>
-          Перестроить
-        </Button>
-      </Grid>
       <Grid mt={'var(--space-md)'} width={'100%'}>
         <PreloadContentPlacement
-          isLoading={model?.isLoading}
+          isLoading={model?.isLoading || isLoading}
         >
+          <Grid
+            zIndex={100}
+            position={'sticky'}
+            display={'flex'}
+            width={'100%'}
+            top={0}
+            height={'calc(var(--header-height) - 5px)'}
+            borderRadius={'var(--border-radius-sm)'}
+            pl={'var(--space-sm)'}
+            alignItems={'center'}
+            style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
+          >
+            <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
+              <Tappable onClick={onMainPageClick}>
+                <Grid
+                  display={'flex'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  borderRadius={'var(--border-radius-sm)'}
+                  backgroundColor={'var(--bg-color)'}
+                  p={'10px 5px'}
+                  minWidth={'140px'}
+                  border={'1px solid var(--primary-color)'}
+                >
+                  <ArrowBackIosRounded fontSize={'20px'} sx={{ color: 'var(--primary-color)' }} />
+                  <Typography
+                    fontWeight={'1000'}
+                    fontSize={'16px'}
+                    userSelect={'none'}
+                    fontFamily={'Nunito'}
+                    pl={'var(--space-sm)'}
+                    color={'var(--primary-color)'}
+                    className={styles.desktop}
+                  >
+                    На главную
+                  </Typography>
+                </Grid>
+              </Tappable>
+            </Grid>
+            <Tabs
+              value={targetTab?.id}
+              onChange={onTabChange}
+              aria-label="date-tabs"
+              variant="scrollable"
+            >
+              {targetTabs.map((tab) => (
+                <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
+              ))}
+            </Tabs>
+          </Grid>
+          <Typography
+            fontFamily={'Nunito'}
+            fontSize={'32px'}
+            lineHeight={1.2}
+            userSelect={'none'}
+            fontWeight={'bold'}
+            color={'var(--text-secondary-color)'}
+            mt={'var(--space-md)'}
+            mb={'var(--space-md)'}
+          >
+            Модель #{id}
+          </Typography>
+          <Grid
+            zIndex={100}
+            display={'flex'}
+            width={'100%'}
+            flexDirection={'column'}
+            top={0}
+            borderRadius={'var(--border-radius-sm)'}
+            gap={1}
+            p={2}
+            mb={3}
+            style={{ backgroundColor: 'var(--bg-color)', zIndex: 1000000000000 }}
+          >
+            <Typography
+              fontFamily={'Nunito'}
+              fontSize={'22px'}
+              lineHeight={1.1}
+              userSelect={'none'}
+              fontWeight={'bold'}
+              mb={2}
+              color={'var(--text-secondary-color)'}
+            >
+              Перестроить график
+            </Typography>
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="demo-simple-select-label">Фича</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={form.feature}
+                label="Фича"
+                onChange={(event) => setForm((form) => ({ ...form, feature: event.target.value }))}
+              >
+                {features.map((feature) => (
+                  <MenuItem key={feature} value={feature}>{feature}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: 'var(--primary-color) !important' }} id="select-date-label">Дата</InputLabel>
+              <Select
+                labelId="select-date-label"
+                id="select-date"
+                value={form.date}
+                label="Дата"
+                onChange={(event) => setForm((form) => ({ ...form, date: event.target.value }))}
+              >
+                {dates.map((feature) => (
+                  <MenuItem key={feature} value={feature}>{feature}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Input
+              type="number"
+              label={'Изменить на стоолько процентов'}
+              fullWidth
+              value={form.percent}
+              onChange={(event) => setForm((form) => ({ ...form, percent: event.target.value }))}
+            />
+            <Button variant={'filled'} disabled={isSubmitDisabled} onClick={onSubmit}>
+              Перестроить
+            </Button>
+          </Grid>
           <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
             <Typography
               fontWeight={'1000'}
@@ -409,6 +419,7 @@ const Model = () => {
               userSelect={'none'}
               fontFamily={'Nunito'}
               color={'white'}
+              mb={2}
             >
               Важность фич
             </Typography>
