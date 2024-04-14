@@ -7,8 +7,8 @@
   margin: 0 !important;
 }
 
-.ytick.ticks.crisp {
-  transform: translateX(5%);
+.ytick {
+  transform: translateX(5%) !important;
 }
 
 
