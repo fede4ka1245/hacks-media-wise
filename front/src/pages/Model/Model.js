@@ -288,56 +288,6 @@ const Model = () => {
         <PreloadContentPlacement
           isLoading={model?.isLoading || isLoading}
         >
-          <Grid
-            zIndex={100}
-            position={'sticky'}
-            display={'flex'}
-            width={'100%'}
-            top={0}
-            height={'calc(var(--header-height) - 5px)'}
-            borderRadius={'var(--border-radius-sm)'}
-            pl={'var(--space-sm)'}
-            alignItems={'center'}
-            style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
-          >
-            <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
-              <Tappable onClick={onMainPageClick}>
-                <Grid
-                  display={'flex'}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  borderRadius={'var(--border-radius-sm)'}
-                  backgroundColor={'var(--bg-color)'}
-                  p={'10px 5px'}
-                  minWidth={'140px'}
-                  border={'1px solid var(--primary-color)'}
-                >
-                  <ArrowBackIosRounded fontSize={'20px'} sx={{ color: 'var(--primary-color)' }} />
-                  <Typography
-                    fontWeight={'1000'}
-                    fontSize={'16px'}
-                    userSelect={'none'}
-                    fontFamily={'Nunito'}
-                    pl={'var(--space-sm)'}
-                    color={'var(--primary-color)'}
-                    className={styles.desktop}
-                  >
-                    На главную
-                  </Typography>
-                </Grid>
-              </Tappable>
-            </Grid>
-            <Tabs
-              value={targetTab?.id}
-              onChange={onTabChange}
-              aria-label="date-tabs"
-              variant="scrollable"
-            >
-              {targetTabs.map((tab) => (
-                <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
-              ))}
-            </Tabs>
-          </Grid>
           <Typography
             fontFamily={'Nunito'}
             fontSize={'32px'}
@@ -345,7 +295,6 @@ const Model = () => {
             userSelect={'none'}
             fontWeight={'bold'}
             color={'var(--text-secondary-color)'}
-            mt={'var(--space-md)'}
             mb={'var(--space-md)'}
           >
             Модель #{id}
@@ -411,6 +360,57 @@ const Model = () => {
             <Button variant={'filled'} disabled={isSubmitDisabled} onClick={onSubmit}>
               Перестроить
             </Button>
+          </Grid>
+          <Grid
+            zIndex={100}
+            position={'sticky'}
+            display={'flex'}
+            width={'100%'}
+            top={0}
+            height={'calc(var(--header-height) - 5px)'}
+            borderRadius={'var(--border-radius-sm)'}
+            pl={'var(--space-sm)'}
+            alignItems={'center'}
+            mb={2}
+            style={{ backgroundColor: 'var(--bg-color)', userSelect: 'none', zIndex: 1000000000000 }}
+          >
+            <Grid pr={'var(--space-md)'} zIndex={1000000000000} className={styles.desktop}>
+              <Tappable onClick={onMainPageClick}>
+                <Grid
+                  display={'flex'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  borderRadius={'var(--border-radius-sm)'}
+                  backgroundColor={'var(--bg-color)'}
+                  p={'10px 5px'}
+                  minWidth={'140px'}
+                  border={'1px solid var(--primary-color)'}
+                >
+                  <ArrowBackIosRounded fontSize={'20px'} sx={{ color: 'var(--primary-color)' }} />
+                  <Typography
+                    fontWeight={'1000'}
+                    fontSize={'16px'}
+                    userSelect={'none'}
+                    fontFamily={'Nunito'}
+                    pl={'var(--space-sm)'}
+                    color={'var(--primary-color)'}
+                    className={styles.desktop}
+                  >
+                    На главную
+                  </Typography>
+                </Grid>
+              </Tappable>
+            </Grid>
+            <Tabs
+              value={targetTab?.id}
+              onChange={onTabChange}
+              aria-label="date-tabs"
+              variant="scrollable"
+            >
+              {targetTabs.map((tab) => (
+                <Tab key={tab?.id} label={tab?.label} value={tab?.id} />
+              ))}
+            </Tabs>
           </Grid>
           <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
             <Typography
